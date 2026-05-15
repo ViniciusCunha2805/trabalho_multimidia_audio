@@ -1,14 +1,3 @@
-/*
- * gera_binarios.c
- *
- * Gera três arquivos binários de exatos 10 MB cada, compostos por
- * unsigned char (0–255), de três formas distintas:
- *
- *  1. Modo completamente aleatório   → arquivo1_aleatorio_completo.bin
- *  2. Modo aleatório restrito (0–25) → arquivo2_aleatorio_restrito.bin
- *  3. Modo não aleatório (padrões)   → arquivo3_nao_aleatorio.bin
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,12 +5,11 @@
 
 #define TAMANHO_MB   10
 #define BYTES_POR_MB (1024 * 1024)
-#define TOTAL_BYTES  (TAMANHO_MB * BYTES_POR_MB)   /* 10 485 760 bytes */
-#define BUF_SIZE     (64 * 1024)                    /* buffer de 64 KB  */
+#define TOTAL_BYTES  (TAMANHO_MB * BYTES_POR_MB)   
+#define BUF_SIZE     (64 * 1024)                    
 
-/* ------------------------------------------------------------------ */
 /* Utilitário: verifica se o arquivo foi criado com o tamanho correto  */
-/* ------------------------------------------------------------------ */
+
 void verifica_tamanho(const char *nome)
 {
     FILE *f = fopen(nome, "rb");
@@ -33,10 +21,8 @@ void verifica_tamanho(const char *nome)
            nome, tam, (int)(tam / BYTES_POR_MB));
 }
 
-/* ================================================================== */
-/* 1. MODO COMPLETAMENTE ALEATÓRIO                                     */
-/*    Faixa: 0–255  (toda a faixa de unsigned char)                   */
-/* ================================================================== */
+/* 1. MODO COMPLETAMENTE ALEATÓRIO*/
+
 void gera_aleatorio_completo(const char *nome, unsigned int semente)
 {
     FILE *f = fopen(nome, "wb");
@@ -60,10 +46,8 @@ void gera_aleatorio_completo(const char *nome, unsigned int semente)
     verifica_tamanho(nome);
 }
 
-/* ================================================================== */
-/* 2. MODO ALEATÓRIO RESTRITO                                          */
-/*    Faixa: 0–25  (≈10 % de 256)                                     */
-/* ================================================================== */
+/* 2. MODO ALEATÓRIO RESTRITO*/
+
 void gera_aleatorio_restrito(const char *nome, unsigned int semente)
 {
     FILE *f = fopen(nome, "wb");
@@ -87,7 +71,6 @@ void gera_aleatorio_restrito(const char *nome, unsigned int semente)
     verifica_tamanho(nome);
 }
 
-/* ================================================================== */
 /* 3. MODO NÃO ALEATÓRIO                                               */
 /*    Estratégias combinadas em blocos alternados:                     */
 /*                                                                     */
@@ -97,11 +80,8 @@ void gera_aleatorio_restrito(const char *nome, unsigned int semente)
 /*   D) Padrão de onda quadrada (0 por 512 bytes, 200 por 512 bytes)  */
 /*   E) Padrão de dente-de-serra de 16 em 16 (0,16,32,...,240,0,...)  */
 /*   F) Alternância simples par/ímpar (0, 1, 0, 1, ...)               */
-/*                                                                     */
-/*   Cada bloco tem tamanho fixo de BLOCO_NAO_RAND bytes e os         */
-/*   padrões se alternam ciclicamente até completar 10 MB.            */
-/* ================================================================== */
-#define BLOCO_NAO_RAND (256 * 4)   /* 1 024 bytes por segmento        */
+
+#define BLOCO_NAO_RAND (256 * 4)
 #define NUM_PADROES    6
 
 void preenche_padrao(unsigned char *buf, long tamanho, int padrao)
@@ -163,9 +143,6 @@ void gera_nao_aleatorio(const char *nome)
     verifica_tamanho(nome);
 }
 
-/* ================================================================== */
-/* MAIN                                                                */
-/* ================================================================== */
 int main(void)
 {
     unsigned int semente = (unsigned int)time(NULL);
